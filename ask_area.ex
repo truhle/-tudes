@@ -43,8 +43,19 @@ defmodule AskArea do
   end
 
   defp get_number(prompt) do
-    answer = IO.gets("Enter #{prompt} > ")
-    String.strip(answer) |> String.to_integer
+    answer = IO.gets("Enter #{prompt} > ") |> String.strip
+    cond do
+      Regex.match?(~r/^\d+$/, answer) ->
+        String.to_integer(answer)
+      Regex.match?(~r/^\d+\.\d+(e\d+)?$/, answer) ->
+        String.to_float(answer)
+      true ->
+        :error
+    end
+  end
+
+  defp calculate(_shape, d1, d2) when d1 == :error or d2 == :error do
+    "The dimensions must be numbers"
   end
 
   defp calculate(shape, d1, d2) when d1 >= 0 and d2 >= 0 do
