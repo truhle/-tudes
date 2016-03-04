@@ -30,4 +30,16 @@ defmodule Stats do
   def range(list) do
     [minimum(list), maximum(list)]
   end
+
+  def mean(list) do
+    List.foldl(list, 0, &(&1 + &2)) / Enum.count(list)
+  end
+
+  def stdv(list) do
+    n = Enum.count(list)
+    {sum, sos} = List.foldl(list, {0, 0}, fn(v, {s1, s2}) ->
+      {s1 + v, s2 + v * v}
+    end)
+    :math.sqrt((n * sos - sum * sum) / (n * (n - 1)))
+  end
 end
