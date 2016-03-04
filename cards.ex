@@ -51,6 +51,6 @@ defmodule Cards do
     else: 0
     {leading, [h | t]} =
       Enum.split(list, split_loc)
-    shuffle(leading ++ t, [h | acc])
+    shuffle(t ++ leading, [h | acc])
   end
 end
