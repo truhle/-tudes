@@ -12,11 +12,11 @@ defmodule College do
 
   def read_lines(device, accum) do
     data = IO.read(device, :line)
-    cond do
-      data == :eof ->
+    case data do
+      :eof ->
         File.close(device)
         accum
-      true ->
+      _ ->
         list = String.rstrip(data) |> String.split(",")
         read_lines(device, [list | accum])
     end
