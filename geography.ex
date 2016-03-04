@@ -49,4 +49,17 @@ defmodule Geography do
         list_to_geo_list(t, [new_geoh | geot])
     end
   end
+
+  def total_population(geo_list, lang) do
+    Enum.reduce(geo_list, 0, fn (country, sum) ->
+      case country.language do
+        ^lang ->
+          sum + Enum.reduce(country.cities, 0, fn (city, pop) ->
+            pop + city.population
+          end)
+        _ ->
+          sum
+      end
+    end)
+  end
 end
