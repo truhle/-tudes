@@ -19,6 +19,18 @@ defmodule Cards do
   end
 
   @doc """
+  Creates a smaller, 8 tuple deck of cards in the form
+  [{"2", "Clubs"}, {"2", "Diamonds"}...] for testing purposes.
+  """
+  @spec make_test_deck() :: list(tuple)
+
+  def make_test_deck do
+    suits = ~w(Clubs Diamonds)
+    values = [2, 3, 4, "A"]
+    for v <- values, s <- suits, do: {v, s}
+  end
+
+  @doc """
     Seeds the random number generator and calls shuffle/2 with
     a list of cards and an empty list to serve as the accumulator.
     Returns a list of shuffled card tuples.
