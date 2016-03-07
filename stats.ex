@@ -1,7 +1,11 @@
 defmodule Stats do
   def minimum(list) do
-    [h|t] = list
-    minimum(t, h)
+    try do
+      [h|t] = list
+      minimum(t, h)
+    rescue
+      error -> error
+    end
   end
 
   def minimum([], lowest) do
@@ -14,8 +18,12 @@ defmodule Stats do
   end
 
   def maximum(list) do
-    [h|t] = list
-    maximum(t, h)
+    try do
+      [h|t] = list
+      maximum(t, h)
+    rescue
+      error -> error
+    end
   end
 
   def maximum([], highest) do
@@ -32,14 +40,22 @@ defmodule Stats do
   end
 
   def mean(list) do
-    List.foldl(list, 0, &(&1 + &2)) / Enum.count(list)
+    try do
+      List.foldl(list, 0, &(&1 + &2)) / Enum.count(list)
+    rescue
+      error -> error
+    end
   end
 
   def stdv(list) do
-    n = Enum.count(list)
-    {sum, sos} = List.foldl(list, {0, 0}, fn(v, {s1, s2}) ->
-      {s1 + v, s2 + v * v}
-    end)
-    :math.sqrt((n * sos - sum * sum) / (n * (n - 1)))
+    try do
+      n = Enum.count(list)
+      {sum, sos} = List.foldl(list, {0, 0}, fn(v, {s1, s2}) ->
+        {s1 + v, s2 + v * v}
+      end)
+      :math.sqrt((n * sos - sum * sum) / (n * (n - 1)))
+    rescue
+      error -> error
+    end
   end
 end
