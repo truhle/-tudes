@@ -54,14 +54,10 @@ defmodule PhoneETS do
     :undefined
   end
 
-  # def insert_into_table([{number: number, start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time} | tail]) do
-  def insert_into_table([h | tail]) do
-    :ets.insert(:calls, Call.call(number: elem(h,0), start_date: elem(h,1), start_time: elem(h,2), end_date: elem(h,3), end_time: elem(h,4)))
-    # :ets.insert(:calls, Call.call({number: number, start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time}))
+  def insert_into_table([{number, start_date, start_time, end_date, end_time} | tail]) do
+    :ets.insert(:calls, Call.call(number: number, start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time))
     insert_into_table(tail)
   end
-
-  # {number: number, start_date: start_date, start_time: start_time, end_date: end_date, end_time: end_time}
 
   def summary do
     first_number = :ets.first(:calls)
