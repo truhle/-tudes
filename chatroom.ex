@@ -6,7 +6,7 @@ defmodule Chatroom do
   end
 
   def start_link do
-    GenServer.start_link(__MODULE__, [], [{:name, {:global, __MODULE__}}])
+    GenServer.start_link(__MODULE__, [], [{:name, __MODULE__}])
   end
 
   def init([]) do
@@ -19,6 +19,7 @@ defmodule Chatroom do
     case request do
       {:login, user_name, server_name} ->
         user = {user_name, server_name}
+        IO.puts("#{user_name}@#{server_name} logging in from #{inspect pid}")
         name_taken? = List.keymember?(users, user, 0)
         reply = case name_taken? do
           true ->
@@ -35,13 +36,13 @@ defmodule Chatroom do
         end
       :logout ->
         user = List.keyfind(users, pid, 1)
-        new_state = List.delete(users, user)
+        new_state = %State{users: List.delete(users, user)}
         reply = {:ok, "#{inspect pid} logged out"}
         {:reply, reply, new_state}
       {:say, text} ->
         user = List.keyfind(users, pid, 1)
-        {{user_name, server_name}, _pid} = user
         other_users = List.delete(users, user)
+        {{user_name, server_name}, _pid} = user
         Enum.each(other_users, fn({_, to_pid}) ->
           GenServer.cast(to_pid, {:message, {user_name, server_name}, text})
         end)
@@ -59,16 +60,4 @@ defmodule Chatroom do
   def handle_cast(msg, state) do
     {:noreply, state}
   end
-
-  def handle_info(_info, state) do
-   {:noreply, state}
- end
-
- def terminate(_reason, _state) do
-   {:ok}
- end
-
- def code_change(_old_version, state, _extra) do
-   {:ok, state}
- end
 end
